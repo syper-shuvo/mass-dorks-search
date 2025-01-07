@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunt Archive</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .output {
+            margin-top: 20px;
+        }
+        .output a {
+            display: block;
+            margin: 5px 0;
+        }
+
+button{
+color:red;
+
+}
+    </style>
+</head>
+<body>
+    <h1>Web Archive URL Opener</h1>
+    <p>Paste your URLs below and click "Generate Links" to open each in the Web Archive.</p>
+
+    <textarea id="urlInput" placeholder="Enter URLs here..."></textarea>
+    <button onclick="generateLinks()" >Generate Links</button>
+
+    <div class="output" id="output"></div>
+
+    <script>
+        function generateLinks() {
+            const input = document.getElementById('urlInput').value;
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = ''; // Clear previous results
+
+            const urls = input.split('\n').map(url => url.trim()).filter(url => url);
+
+            if (urls.length === 0) {
+                alert('Please enter at least one URL.');
+                return;
+            }
+
+            urls.forEach(url => {
+                // Remove protocol (http:// or https://)
+                const strippedUrl = url.replace(/^https?:\/\//, '');
+                const archiveUrl = `https://web.archive.org/cdx/search/cdx?url=*.${encodeURIComponent(strippedUrl)}&fl=original&collapse=urlkey`;
+                const link = document.createElement('a');
+                link.href = archiveUrl;
+                link.target = '_blank';
+                link.textContent = archiveUrl;
+                outputDiv.appendChild(link);
+            });
+        }
+    </script>
+</body>
+</html>
